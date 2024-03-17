@@ -1,0 +1,68 @@
+import datetime
+
+class Patient:
+    def __init__(self, name, phone):
+        self.name = name
+        self.phone = phone
+
+class Appointment:
+    def __init__(self, patient, date, time):
+        self.patient = patient
+        self.date = date
+        self.time = time
+
+class MedicalScheduler:
+    def __init__(self):
+        self.appointments = []
+
+    def schedule_appointment(self, patient, date, time):
+        appointment = Appointment(patient, date, time)
+        self.appointments.append(appointment)
+
+    def send_reminder(self, appointment):
+        print(f"Sending reminder to {appointment.patient.name} for the appointment on {appointment.date} at {appointment.time}")
+
+    def get_appointments_for_date(self, date):
+        return [appointment for appointment in self.appointments if appointment.date == date]
+
+def main():
+    scheduler = MedicalScheduler()
+
+    while True:
+        print("\nMedical Appointment Scheduler")
+        print("1. Schedule Appointment")
+        print("2. View Appointments for Date")
+        print("3. Exit")
+        choice = input("Enter your choice: ")
+
+        if choice == '1':
+            name = input("Enter patient name: ")
+            phone = input("Enter patient phone number: ")
+            date_str = input("Enter appointment date (YYYY-MM-DD): ")
+            time_str = input("Enter appointment time (HH:MM): ")
+            date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+            time = datetime.datetime.strptime(time_str, "%H:%M").time()
+            patient = Patient(name, phone)
+            scheduler.schedule_appointment(patient, date, time)
+            print("Appointment scheduled successfully!")
+
+        elif choice == '2':
+            date_str = input("Enter date to view appointments (YYYY-MM-DD): ")
+            date = datetime.datetime.strptime(date_str, "%Y-%m-%d").date()
+            appointments = scheduler.get_appointments_for_date(date)
+            if not appointments:
+                print("No appointments scheduled for the selected date.")
+            else:
+                print("Appointments for", date)
+                for appointment in appointments:
+                    print(f"{appointment.patient.name} - {appointment.time}")
+
+        elif choice == '3':
+            print("Exiting the Medical Appointment Scheduler. Goodbye!")
+            break
+
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
